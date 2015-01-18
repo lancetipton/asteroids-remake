@@ -1,10 +1,37 @@
 <html>
   <head>
-    <title>WebPong</title>
+    <title>Astroids</title>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="public/stylesheets/asteroids.css">
 
   </head>
   <body>
+    <center>
+
+    <div id='connect' class='connect'>
+
+      <form id='logIn'>
+        <h3>Please Sign In:</h3>
+        <input id='userName' type='text' placeholder='User Name' />
+        <input id='password' type='text' placeholder='Password' />
+        <input type= 'submit' />
+      </form>
+
+      <form id='signIn'>
+        <h3>New User:</h3>
+        <input id='newName' type='text' placeholder='User Name' />
+        <input id='newPassword' type='text' placeholder='Password' />
+        <input type= 'submit' />
+      </form>
+
+    </div>
+
+
+      <div id='gameDiv'>
+      </div>
+    </center>
+
+
   </body>
     <script src="public/javascripts/phaser.min.js"></script>
     <script src="public/javascripts/game.js"></script>
@@ -14,4 +41,5 @@
     <script src="public/javascripts/socket.io.js"></script>
     <script src="public/javascripts/jquery.js"></script>
     <script src="public/javascripts/serverCalls.js"></script>
+    <script src="public/javascripts/signin.js"></script>
 </html>

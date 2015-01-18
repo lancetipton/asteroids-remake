@@ -15,7 +15,7 @@ var Easy ={
 var Hard = {
   asteroidAmount: randomNumberPos(4, 10),
   bulletKill: 300,
-  bulletLifespan: 2000,
+  bulletLifespan: 500,
   asteroidHitPoints: 50,
   playerDeathPoints: -200
 }

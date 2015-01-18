@@ -1,0 +1,10 @@
+.connect {
+  position: absolute;
+  margin: auto;
+  height: 30%;
+  width: 20%;
+  background-color: gray;
+  padding: 0.5%;
+  border: 3px solid black;
+
+}

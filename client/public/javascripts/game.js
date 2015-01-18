@@ -218,18 +218,20 @@ function screenWrap (object) {
 
 var main = {
   preload: function() {
+
     // load the play button into this game state:
     game.load.image('start', 'public/images/gui/start.png');
     game.load.image('background', 'public/images/background.png');
   },
   create: function(){
-    getPlayerFromServer();
+
 
 
     game.add.sprite(0, 0, 'background');
-    currentLevel = Easy;
+    currentLevel = Hard;
 
-
+    playerNameText = game.add.text(400, 200, 'Player Name: ' + playerName, { font: "40px Arial", fill: "#ffffff", align: "center" });
+    playerNameText.anchor.setTo(0.5, 0.5);
     totalScoreText = game.add.text(400, 250, 'Total Points: ' + totalScore, { font: "40px Arial", fill: "#ffffff", align: "center" });
     totalScoreText.anchor.setTo(0.5, 0.5);
 
@@ -242,7 +244,19 @@ var main = {
     // game.input.onDown.addOnce(playGame, this);
     startBtn.events.onInputDown.add(playGame, this);
 
+    //  Capture all key presses
+
+
+  },
+
+  update: function() {
+    playerName = playerTemplate['name'];
+    playerNameText.text = 'Player Name: ' + playerName;
+    totalScore = playerTemplate['points'];
+    totalScoreText.text = 'Total Points: ' + totalScore;
   }
+
+
 };
 
 function playGame(){
@@ -250,8 +264,9 @@ function playGame(){
 };
 
 
+
 // Setup game
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', 'gameDiv');
+var game = new Phaser.Game(800, 600, Phaser.AUTO,'gameDiv');
 game.state.add('play', play);
 game.state.add('main', main);
 game.state.start('main');

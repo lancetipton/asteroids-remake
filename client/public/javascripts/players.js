@@ -1,9 +1,11 @@
 allPlayers = []
 totalScore = 0;
+playerName = '';
 
 function Player(playerInfo) {
   this.id = playerInfo['id'],
-  this.points = 0,
+  this.name = playerInfo['name']
+  this.points = playerInfo['points'],
   this.bulletTime = 0,
   this.lives = playerInfo['lives'],
   this.canBeHit = playerInfo['canBeHit'],
@@ -99,6 +101,8 @@ Player.prototype.reset = function(player) {
 
 playerTemplate = {
     id: 0,
+    name: '',
+    points: 0,
     lives: 3,
     canBeHit: true,
     sprite: 'ship',
