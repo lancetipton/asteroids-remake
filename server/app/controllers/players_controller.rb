@@ -15,7 +15,7 @@ class PlayersController < ApplicationController
   def create
     player = Player.new(:name => params['name'], :password => params['password'])
     if player.save
-      game = Game.new(:game => params['game'], :score => 10, player_id: player.id )
+      game = Game.new(:game => params['game'], :score => 0, player_id: player.id )
       if game.save
         games = player.games.all
         render :json => {player: player, games: games}
@@ -28,7 +28,7 @@ class PlayersController < ApplicationController
 
   def access_control
     headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, DELETE'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
     headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token'
   end
 
