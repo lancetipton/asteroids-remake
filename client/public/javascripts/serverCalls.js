@@ -1,3 +1,5 @@
+var player, newGame;
+
 function getPlayerFromServer(name, password){
 // ajax call here...
 console.log('getting the player...');
@@ -7,10 +9,10 @@ console.log('getting the player...');
     type: 'get',
     data: {name: name, password: password, game: 'Asteroid'},
   }).done(function(data){
+    console.log('Player found, setting game!')
     player = data['player']
-    asteroidGame = data['games'][0]
-
-    setPlayer();
+    newGame = data['games'][0]
+    setPlayer(player, newGame);
 
 
   }).fail(function(data){
@@ -28,22 +30,44 @@ function createNewPlayerOnServer(name, password){
   }).done(function(data){
 
     player = data['player']
-    asteroidGame = data['games'][0]
+    newGame = data['games'][0]
 
-    setPlayer();
+    setPlayer(player, newGame);
 
   }).fail(function(data){
     console.log('failed to create new player!');
   });
 }
 
-function setPlayer(){
+function updatePlayerScoreOnServer(scoreToPass){
+
+  $.ajax({
+    url:'http://localhost:3000/games/' + newGame.id,
+    type: 'get',
+    data: {score: scoreToPass},
+  }).done(function(data){
+
+    totalScore = data['game']['score'];
+    playerTemplate['points'] = totalScore;
+    console.log('Score has been updated to: ' + totalScore);
+
+  }).fail(function(data){
+    console.log('failed to update Score!');
+  });
+
+
+};
+
+
+
+
+function setPlayer(player, newGame){
     playerTemplate['name'] = player['name']
-    console.log(playerTemplate['name'])
     playerTemplate['id'] = player['id']
-    playerTemplate['points'] = asteroidGame['score']
+    playerTemplate['points'] = newGame['score']
     $('#connect').hide();
 }
+
 
 
 

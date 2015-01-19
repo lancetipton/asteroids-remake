@@ -6,18 +6,20 @@ currentLevel = '';
 
 var Easy ={
   asteroidAmount: randomNumberPos(2, 2),
+  speed: 80,
   bulletKill: 100,
   bulletLifespan: 4000,
   asteroidHitPoints: 100,
-  playerDeathPoints: -50
+  playerDeathPoints: -10
 
 }
 var Hard = {
   asteroidAmount: randomNumberPos(4, 10),
+  speed: 200,
   bulletKill: 300,
-  bulletLifespan: 500,
-  asteroidHitPoints: 50,
-  playerDeathPoints: -200
+  bulletLifespan: 400,
+  asteroidHitPoints: 25,
+  playerDeathPoints: -1000
 }
 
 
@@ -113,7 +115,7 @@ function buildSmallAsteriods(howMany){
 
 
 function asteroidFloat(asteroidPassed){
-  asteroidPassed.body.velocity.x = randomNumberNeg(1, 80);
-  asteroidPassed.body.velocity.y = randomNumberNeg(1, 80);
-  asteroidPassed.body.angularVelocity = randomNumberNeg(1, 80);
+  asteroidPassed.body.velocity.x = randomNumberNeg(1, currentLevel.speed);
+  asteroidPassed.body.velocity.y = randomNumberNeg(1, currentLevel.speed);
+  asteroidPassed.body.angularVelocity = randomNumberNeg(1, currentLevel.speed);
 };

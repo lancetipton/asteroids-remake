@@ -22,7 +22,7 @@ function Player(playerInfo) {
 
 Player.prototype.updatePoints = function(points){
   this.points += points;
-  this.hud.text = 'Player 1 Lives: ' + this.lives + '   Points: ' + this.points;
+  this.hud.text =  this.name + ' Lives: ' + this.lives + '   Points: ' + this.points;
 }
 
 Player.prototype.checkMovement = function(){
@@ -82,7 +82,6 @@ Player.prototype.reset = function(player) {
         player.ship.body.acceleration.set(0);
         player.canBeHit = false;
         player.canShoot = true;
-        player.updatePoints(-player.points);
         setTimeout(function(){
           player.canBeHit = true;
         }, 5000);
@@ -93,10 +92,15 @@ Player.prototype.reset = function(player) {
   }
   else{
     this.gameOver = true;
+    if(player.points < totalScore){
+      scoreToSend = ((totalScore - player.points) * -1);
+      updatePlayerScoreOnServer(scoreToSend);
+    };
     endGame();
   };
 
 };
+
 
 
 playerTemplate = {
@@ -104,12 +108,14 @@ playerTemplate = {
     name: '',
     points: 0,
     lives: 3,
-    canBeHit: true,
+    canBeHit: false,
     sprite: 'ship',
     startPosX: 400,
     startPosY: 300,
     anchor: 0.5
 };
+
+
 
 
 
@@ -127,6 +133,13 @@ function buildPlayers(){
   player.ship.body.maxVelocity.set(200);
   player.ship.body.width = 29;
   player.ship.body.height = 23;
-  player.hud = game.add.text(32, 550, 'Player 1 Lives ' + player.lives + '   Points: ' + player.points, { font: "20px Arial", fill: "#ffffff", align: "left" });
+  player.hud = game.add.text(32, 550, player.name + ' Lives ' + player.lives + '   Points: ' + player.points, { font: "20px Arial", fill: "#ffffff", align: "left" });
+
+  setTimeout(function(){
+    player.canBeHit = true;
+  }, 2000);
+
   allPlayers.push(player);
+
+
 }

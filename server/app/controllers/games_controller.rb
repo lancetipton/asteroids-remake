@@ -5,8 +5,8 @@ class GamesController < ApplicationController
   def show
     game = Game.find(params['id'])
     game.score += params['score'].to_i
-
-
+    game.save
+    render :json => {game: game}
   end
 
 

@@ -77,13 +77,9 @@ var play = {
     allScreenWrap();
     worldColliders();
 
-
-
   }
 
 };
-
-
 
 
 function checkWin(player){
@@ -91,6 +87,7 @@ function checkWin(player){
         game.state.restart();
         player.gameOver = true
         totalScore += player.points;
+        updatePlayerScoreOnServer(totalScore);
         endGame();
     };
 };
@@ -101,7 +98,6 @@ function endGame(){
         game.state.start('main');
     };
 };
-
 
 function worldColliders(){
     game.physics.arcade.collide(bullets, bigAsteroids, bulletHitBigAsteroid.bind(player), null, this);
@@ -228,23 +224,32 @@ var main = {
 
 
     game.add.sprite(0, 0, 'background');
-    currentLevel = Hard;
+    currentLevel = Easy;
 
     playerNameText = game.add.text(400, 200, 'Player Name: ' + playerName, { font: "40px Arial", fill: "#ffffff", align: "center" });
     playerNameText.anchor.setTo(0.5, 0.5);
     totalScoreText = game.add.text(400, 250, 'Total Points: ' + totalScore, { font: "40px Arial", fill: "#ffffff", align: "center" });
     totalScoreText.anchor.setTo(0.5, 0.5);
 
+    var easyBtn = game.add.sprite(100, game.world.centerY, 'start');
+    easyBtn.name = 'easyBtn';
+    var hardBtn = game.add.sprite(200, game.world.centerY, 'start');
+    hardBtn.name = 'hardBtn';
+
     var startBtn = game.add.sprite(300, game.world.centerY, 'start');
+
 
     //  Enables all kind of input actions on this image (click, etc)
     startBtn.inputEnabled = true;
+    easyBtn.inputEnabled = true;
+    hardBtn.inputEnabled = true;
 
     // When we click on the button, it will do the below. playGame is the function it will run when clicked.
     // game.input.onDown.addOnce(playGame, this);
     startBtn.events.onInputDown.add(playGame, this);
+    easyBtn.events.onInputDown.add(setDifficult, this);
+    hardBtn.events.onInputDown.add(setDifficult, this);
 
-    //  Capture all key presses
 
 
   },
@@ -263,10 +268,19 @@ function playGame(){
   game.state.start('play');
 };
 
+function setDifficult(btn){
+    if (btn.name == 'easyBtn'){
+        currentLevel = Easy;
+    }
+    else if(btn.name == 'hardBtn'){
+        currentLevel = Hard;
+    }
+}
+
 
 
 // Setup game
-var game = new Phaser.Game(800, 600, Phaser.AUTO,'gameDiv');
+var game = new Phaser.Game(800, 600, Phaser.CANVAS,'gameDiv');
 game.state.add('play', play);
 game.state.add('main', main);
 game.state.start('main');
