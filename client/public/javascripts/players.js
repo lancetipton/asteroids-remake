@@ -93,7 +93,10 @@ Player.prototype.reset = function(player) {
   else{
     this.gameOver = true;
     if(player.points < totalScore){
-      scoreToSend = ((totalScore - player.points) * -1);
+      console.log(totalScore);
+      console.log(player.points);
+      scoreToSend = (totalScore - player.points) * -1;
+      console.log(scoreToSend);
       updatePlayerScoreOnServer(scoreToSend);
     };
     endGame();
@@ -107,7 +110,7 @@ playerTemplate = {
     id: 0,
     name: '',
     points: 0,
-    lives: 3,
+    lives: 1,
     canBeHit: false,
     sprite: 'ship',
     startPosX: 400,

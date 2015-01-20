@@ -40,16 +40,17 @@ function createNewPlayerOnServer(name, password){
 }
 
 function updatePlayerScoreOnServer(scoreToPass){
+  console.log(scoreToPass);
 
   $.ajax({
     url:'http://localhost:3000/games/' + newGame.id,
-    type: 'get',
+    type: 'put',
     data: {score: scoreToPass},
   }).done(function(data){
 
-    totalScore = data['game']['score'];
-    playerTemplate['points'] = totalScore;
-    console.log('Score has been updated to: ' + totalScore);
+    // totalScore = data['game']['score'];
+    playerTemplate['points'] = data['game']['score'];
+    console.log('Score has been updated to: ' + playerTemplate['points']);
 
   }).fail(function(data){
     console.log('failed to update Score!');

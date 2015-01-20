@@ -3,7 +3,12 @@ class GamesController < ApplicationController
 
 
   def show
+
+  end
+
+  def update
     game = Game.find(params['id'])
+    p params['score']
     game.score += params['score'].to_i
     game.save
     render :json => {game: game}
@@ -15,6 +20,7 @@ class GamesController < ApplicationController
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, PUT, DELETE'
     headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token'
+    headers['Access-Control-Request-Method'] = 'GET, PUT, POST, OPTIONS'
   end
 
 end
