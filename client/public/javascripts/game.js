@@ -32,6 +32,9 @@ var play = {
     game.load.image('sm05', 'public/images/asteroids/sm05.png');
     game.load.image('sm06', 'public/images/asteroids/sm06.png');
     game.load.image('sm07', 'public/images/asteroids/sm07.png');
+
+
+    game.load.image('rocket', 'public/images/items/rocket.png');
   },
 
 
@@ -54,6 +57,7 @@ var play = {
     buildBullets();
     buildAsteriods();
     buildPlayers();
+    buildItems('rocket');
 
   },
 
@@ -69,9 +73,12 @@ var play = {
         game.physics.arcade.collide(player.ship, bigAsteroids, shipHitAsteroid.bind(player), null, this);
         game.physics.arcade.collide(player.ship, medAsteroids, shipHitAsteroid.bind(player), null, this);
         game.physics.arcade.collide(player.ship, smallAsteroids, shipHitAsteroid.bind(player), null, this);
+        game.physics.arcade.collide(player.ship, items, getItem.bind(player), null, this);
 
         screenWrap(player.ship);
         checkWin(player);
+
+
     };
 
     allScreenWrap();
@@ -80,6 +87,11 @@ var play = {
   }
 
 };
+
+function getItem(player, item){
+    this.gotItem(item.type);
+    item.kill();
+}
 
 
 function checkWin(player){
@@ -109,9 +121,15 @@ function worldColliders(){
     game.physics.arcade.collide(medAsteroids, medAsteroids);
     game.physics.arcade.collide(smallAsteroids, medAsteroids);
     game.physics.arcade.collide(smallAsteroids, smallAsteroids);
+
+    game.physics.arcade.collide( bigAsteroids, items);
+    game.physics.arcade.collide(medAsteroids, items);
+    game.physics.arcade.collide(smallAsteroids, items);
+
 };
 
 function allScreenWrap(){
+    items.forEachExists(screenWrap, this);
     bullets.forEachExists(screenWrap, this);
     bigAsteroids.forEachExists(screenWrap, this);
     medAsteroids.forEachExists(screenWrap, this);
@@ -210,13 +228,16 @@ function screenWrap (object) {
     };
 };
 
-
-
 var main = {
   preload: function() {
 
     // load the play button into this game state:
-    game.load.image('start', 'public/images/gui/start.png');
+    game.load.image('start_off', 'public/images/gui/start_off.png');
+    game.load.image('easy_off', 'public/images/gui/easy_off.png');
+    game.load.image('hard_off', 'public/images/gui/hard_off.png');
+    game.load.image('start_on', 'public/images/gui/start_on.png');
+    game.load.image('easy_on', 'public/images/gui/easy_on.png');
+    game.load.image('hard_on', 'public/images/gui/hard_on.png');
     game.load.image('background', 'public/images/background.png');
   },
   create: function(){
@@ -231,12 +252,12 @@ var main = {
     totalScoreText = game.add.text(400, 250, 'Total Points: ' + totalScore, { font: "40px Arial", fill: "#ffffff", align: "center" });
     totalScoreText.anchor.setTo(0.5, 0.5);
 
-    var easyBtn = game.add.sprite(100, game.world.centerY, 'start');
+    var easyBtn = game.add.sprite(200, game.world.centerY, 'easy_off');
     easyBtn.name = 'easyBtn';
-    var hardBtn = game.add.sprite(200, game.world.centerY, 'start');
+    var hardBtn = game.add.sprite(400, game.world.centerY, 'hard_off');
     hardBtn.name = 'hardBtn';
 
-    var startBtn = game.add.sprite(300, game.world.centerY, 'start');
+    var startBtn = game.add.sprite(300, game.world.centerY + 100, 'start_off');
 
 
     //  Enables all kind of input actions on this image (click, etc)
@@ -259,6 +280,8 @@ var main = {
     playerNameText.text = 'Player Name: ' + playerName;
     totalScore = playerTemplate['points'];
     totalScoreText.text = 'Total Points: ' + totalScore;
+
+
   }
 
 
@@ -271,9 +294,13 @@ function playGame(){
 function setDifficult(btn){
     if (btn.name == 'easyBtn'){
         currentLevel = Easy;
+        startBtn = game.add.sprite(200, game.world.centerY, 'easy_on');
+        hardBtn = game.add.sprite(400, game.world.centerY, 'hard_off');
     }
     else if(btn.name == 'hardBtn'){
         currentLevel = Hard;
+        hardBtn = game.add.sprite(400, game.world.centerY, 'hard_on');
+        easyBtn = game.add.sprite(200, game.world.centerY, 'easy_off');
     }
 }
 

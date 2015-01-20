@@ -62,7 +62,7 @@ function buildBigAsteriods(howMany){
   var asteroid = ''
   for(var i = 0; i < howMany; i ++){
     var sprite = bigAsteroidsSprites[randomNumberPos(0, 6)]
-    var asteroid = bigAsteroids.create(randomNumberPos(0, 750), randomNumberPos(0, 500), sprite);
+    asteroid = bigAsteroids.create(randomNumberPos(0, 750), randomNumberPos(0, 500), sprite);
     asteroid.enableBody = true;
     asteroid.body.width = 45;
     asteroid.body.height = 48;

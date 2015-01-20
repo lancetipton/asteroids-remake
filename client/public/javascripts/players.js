@@ -16,9 +16,16 @@ function Player(playerInfo) {
   this.canShoot = true,
   this.shootCount = 10,
   this.bulletKill = currentLevel.bulletKill,
-  this.gameOver = false
+  this.gameOver = false,
+  this.item = ''
 
 };
+
+Player.prototype.gotItem = function(item){
+  console.log('got item');
+  this.item = item
+}
+
 
 Player.prototype.updatePoints = function(points){
   this.points += points;
@@ -53,7 +60,15 @@ Player.prototype.checkMovement = function(){
 }
 
 Player.prototype.fireBullet = function () {
-  if(this.canShoot == true){
+  if(this.item == 'rocket'){
+    console.log('fire Rocket');
+    this.item = '';
+    // fire rocket here
+    // code is working it, gets to this point!
+    // jsut need to set rockt fireing
+  }
+
+  else if(this.canShoot == true){
     if (game.time.now > this.bulletTime){
         bullet = bullets.getFirstExists(false);
 
