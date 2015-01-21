@@ -67,6 +67,7 @@ function setPlayer(player, newGame){
     playerTemplate['id'] = player['id']
     playerTemplate['points'] = newGame['score']
     $('#connect').hide();
+      $('#gameDiv').show();
 }
 
 

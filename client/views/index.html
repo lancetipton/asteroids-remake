@@ -9,40 +9,47 @@
 
 
 
-
+    <center>
     <div id='menuGame' class= 'menuGame'>
-        <div id='connect' class='connect'>
-
-          <form id='logIn'>
-            <h3>Please Sign In:</h3>
-            <input id='userName' type='text' placeholder='User Name' />
-            <input id='password' type='text' placeholder='Password' />
-            <input type= 'submit' id='logInBtn' />
-          </form>
-
-          <form id='signIn'>
-            <h3>New User:</h3>
-            <input id='newName' type='text' placeholder='User Name' />
-            <input id='newPassword' type='text' placeholder='Password' />
-            <input type= 'submit' id='signInBtn' />
+          <div id='connect' class='connect'>
+            <br>
+            <img src="public/images/gui/logo.png">
             <br>
             <br>
-            <button id='leadersBtn'>Leader Board</button>
-          </form>
+            <br>
+            <br>
+            <form id='logIn'>
+              <h3>Please Sign In:</h3>
+              <input id='userName' type='text' placeholder='User Name' />
+              <input id='password' type='text' placeholder='Password' />
+              <button id='logInBtn'>Log In</button>
+            </form>
 
-        </div>
+            <form id='signIn'>
+              <h3>New User:</h3>
+              <input id='newName' type='text' placeholder='User Name' />
+              <input id='newPassword' type='text' placeholder='Password' />
+              <button id='signInBtn' />Sign In</button>
+              <br>
+              <br>
+            </form>
+          <button id='leadersBtn'>Leader Board</button>
+          <button id='playBtn'>Just Play!</button>
+          <div id="leaders" class="leaders">
+          </div>
 
 
-      <div id="leaders" class="leaders">
-      </div>
+          </div>
 
-      <div id='gameDiv'>
-      </div>
+          <div id='gameDiv'>
+          </div>
+
 
     </div>
 
 
   </body>
+
     <script src="public/javascripts/phaser.min.js"></script>
     <script src="public/javascripts/game.js"></script>
     <script src="public/javascripts/asteriods.js"></script>
@@ -53,4 +60,5 @@
     <script src="public/javascripts/jquery.js"></script>
     <script src="public/javascripts/serverCalls.js"></script>
     <script src="public/javascripts/signin.js"></script>
+
 </html>

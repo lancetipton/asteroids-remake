@@ -14,16 +14,16 @@ function Player(playerInfo) {
   this.startPosY = playerInfo['startPosY'],
   this.anchor = playerInfo['anchor'],
   this.canShoot = true,
-  this.shootCount = 10,
+  this.shootCount = 0,
   this.bulletKill = currentLevel.bulletKill,
   this.gameOver = false,
   this.item = ''
 
 };
 
-Player.prototype.gotItem = function(item){
+Player.prototype.gotItem = function(pickedUpItem, player){
   console.log('got item');
-  this.item = item
+  this.item = pickedUpItem;
 }
 
 
@@ -57,18 +57,34 @@ Player.prototype.checkMovement = function(){
         this.fireBullet();
     };
 
-}
+};
+
 
 Player.prototype.fireBullet = function () {
-  if(this.item == 'rocket'){
-    console.log('fire Rocket');
-    this.item = '';
-    // fire rocket here
-    // code is working it, gets to this point!
-    // jsut need to set rockt fireing
-  }
 
-  else if(this.canShoot == true){
+  if(this.item == 'rocket' && this.shootCount < 11){
+    this.shootCount ++;
+    if (game.time.now > this.bulletTime){
+      rocket = rockets.getFirstExists(false);
+      if (rocket){
+          this.updatePoints(-100)
+          rocket.reset(this.ship.body.x + 16, this.ship.body.y + 16);
+          rocket.lifespan = currentLevel.bulletLifespan;
+          rocket.rotation = this.ship.rotation;
+          game.physics.arcade.velocityFromRotation(this.ship.rotation, 400, rocket.body.velocity);
+          this.bulletTime = game.time.now + this.bulletKill;
+
+      };
+
+    };
+
+  }
+  else{
+    this.item = '';
+    this.shootCount = 0;
+  };
+
+  if(this.canShoot == true){
     if (game.time.now > this.bulletTime){
         bullet = bullets.getFirstExists(false);
 
@@ -137,27 +153,29 @@ playerTemplate = {
 
 
 
-function buildPlayers(){
-  player = new Player(playerTemplate);
-  player.ship = game.add.sprite(400,300, player.sprite);
-  game.physics.enable(player.ship, Phaser.Physics.ARCADE);
-  player.moveUp = game.input.keyboard.addKey(Phaser.Keyboard.W);
-  player.moveDown = game.input.keyboard.addKey(Phaser.Keyboard.S);
-  player.turnLeft = game.input.keyboard.addKey(Phaser.Keyboard.A);
-  player.turnRight = game.input.keyboard.addKey(Phaser.Keyboard.D);
-  player.shoot = game.input.keyboard.addKey(Phaser.Keyboard.G);
-  player.ship.anchor.set(0.5, 0.5);
-  player.ship.body.drag.set(100);
-  player.ship.body.maxVelocity.set(200);
-  player.ship.body.width = 29;
-  player.ship.body.height = 23;
-  player.hud = game.add.text(32, 550, player.name + ' Lives ' + player.lives + '   Points: ' + player.points, { font: "20px Arial", fill: "#ffffff", align: "left" });
+function buildPlayers(numOfPalyers){
+  for(var i = 0; i < numOfPalyers; i++){
 
-  setTimeout(function(){
-    player.canBeHit = true;
-  }, 2000);
+    player = new Player(playerTemplate);
+    player.ship = game.add.sprite(randomNumberPos(0, 750), randomNumberPos(0, 500), player.sprite);
+    game.physics.enable(player.ship, Phaser.Physics.ARCADE);
+    player.moveUp = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    player.moveDown = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    player.turnLeft = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    player.turnRight = game.input.keyboard.addKey(Phaser.Keyboard.D);
+    player.shoot = game.input.keyboard.addKey(Phaser.Keyboard.G);
+    player.ship.anchor.set(0.5, 0.5);
+    player.ship.body.drag.set(100);
+    player.ship.body.maxVelocity.set(200);
+    player.ship.body.width = 29;
+    player.ship.body.height = 23;
+    player.hud = game.add.text(32, 550, player.name + ' Lives ' + player.lives + '   Points: ' + player.points, { font: "20px Arial", fill: "#ffffff", align: "left" });
 
-  allPlayers.push(player);
+    setTimeout(function(){
+      player.canBeHit = true;
+    }, 2000);
 
+    allPlayers.push(player);
+  };
 
 }

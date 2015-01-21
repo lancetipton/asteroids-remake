@@ -1,12 +1,19 @@
-.connect {
-  position: absolute;
-  height: 600px;
-  width: 800px;
-  background-color: gray;
-  padding: 0.5%;
-  border: 3px solid black;
-   z-index: 2;
+body{
+  background-color: #333333;
+  padding-top: 40px;
+}
 
+.menuGame {
+
+}
+
+.connect {
+  background-image: url(../images/gui/menu_background.png);
+  height: 400px;
+  width: 500px;
+  margin: auto;
+  color: yellow;
+  text-shadow: -1px 0 red, 0 1px red, 1px 0 red, 0 -1px red;
 }
 
 .leaders {
@@ -14,9 +21,7 @@
   height: 600px;
   width: 800px;
   background-color: green;
-  padding: 0.5%;
-  border: 3px solid black;
-  z-index: 1;
 }
+
 
 

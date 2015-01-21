@@ -56,8 +56,9 @@ var play = {
 
     buildBullets();
     buildAsteriods();
-    buildPlayers();
+    buildPlayers(numOfPlayers);
     buildItems('rocket');
+    buildRockets();
 
   },
 
@@ -89,7 +90,7 @@ var play = {
 };
 
 function getItem(player, item){
-    this.gotItem(item.type);
+    this.gotItem(item.type, player);
     item.kill();
 }
 
@@ -115,6 +116,11 @@ function worldColliders(){
     game.physics.arcade.collide(bullets, bigAsteroids, bulletHitBigAsteroid.bind(player), null, this);
     game.physics.arcade.collide(bullets, medAsteroids, bulletHitMedAsteroid.bind(player), null, this);
     game.physics.arcade.collide(bullets, smallAsteroids, bulletHitSmallAsteroid.bind(player), null, this);
+
+    game.physics.arcade.collide(rockets, bigAsteroids, rocketHitAsteroid.bind(player), null, this);
+    game.physics.arcade.collide(rockets, medAsteroids, rocketHitAsteroid.bind(player), null, this);
+    game.physics.arcade.collide(rockets, smallAsteroids, rocketHitAsteroid.bind(player), null, this);
+
     game.physics.arcade.collide(bigAsteroids, smallAsteroids);
     game.physics.arcade.collide(bigAsteroids, bigAsteroids);
     game.physics.arcade.collide(bigAsteroids, medAsteroids);
@@ -136,6 +142,11 @@ function allScreenWrap(){
     smallAsteroids.forEachExists(screenWrap, this);
 };
 
+
+function  rocketHitAsteroid(rocket, asteroid){
+    asteroid.kill();
+    rocket.kill();
+}
 
 function bulletHitBigAsteroid(bullet, asteroid){
     var posX = asteroid.x;
@@ -232,44 +243,57 @@ var main = {
   preload: function() {
 
     // load the play button into this game state:
-    game.load.image('start_off', 'public/images/gui/start_off.png');
-    game.load.image('easy_off', 'public/images/gui/easy_off.png');
-    game.load.image('hard_off', 'public/images/gui/hard_off.png');
-    game.load.image('start_on', 'public/images/gui/start_on.png');
+    game.load.image('down', 'public/images/gui/down.png');
+    game.load.image('up', 'public/images/gui/up.png');
     game.load.image('easy_on', 'public/images/gui/easy_on.png');
     game.load.image('hard_on', 'public/images/gui/hard_on.png');
     game.load.image('background', 'public/images/background.png');
+    game.load.image('logo', 'public/images/gui/logo.png');
   },
   create: function(){
 
+    numOfPlayers = 1;
 
 
     game.add.sprite(0, 0, 'background');
     currentLevel = Easy;
 
-    playerNameText = game.add.text(400, 200, 'Player Name: ' + playerName, { font: "40px Arial", fill: "#ffffff", align: "center" });
+    playerNameText = game.add.text(400, game.world.centerY + 120, 'Player Name: ' + playerName, { font: "16px Arial", fill: "#ffffff", align: "center" });
     playerNameText.anchor.setTo(0.5, 0.5);
-    totalScoreText = game.add.text(400, 250, 'Total Points: ' + totalScore, { font: "40px Arial", fill: "#ffffff", align: "center" });
+
+    totalScoreText = game.add.text(400, game.world.centerY + 100, 'Total Points: ' + totalScore, { font: "16px Arial", fill: "#ffffff", align: "center" });
     totalScoreText.anchor.setTo(0.5, 0.5);
 
-    var easyBtn = game.add.sprite(200, game.world.centerY, 'easy_off');
+    numOfPlayersText = game.add.text(game.world.centerX, game.world.centerY + 50, " " + numOfPlayers, { font: "16px Arial", fill: "#ffffff", align: "center" });
+    numOfPlayersText.anchor.setTo(0.5, 0.5);
+
+    var logo = game.add.sprite(200, game.world.centerY -200, 'logo');
+
+    var upBtn = game.add.sprite(game.world.centerX + 20, game.world.centerY, 'up');
+    upBtn.name = 'upBtn';
+    var downBtn = game.add.sprite(game.world.centerX + 20, game.world.centerY + 40, 'down');
+    downBtn.name = 'downBtn';
+
+    var easyBtn = game.add.sprite(210, game.world.centerY - 80, 'easy_on');
     easyBtn.name = 'easyBtn';
-    var hardBtn = game.add.sprite(400, game.world.centerY, 'hard_off');
+    var hardBtn = game.add.sprite(410, game.world.centerY -80, 'hard_on');
     hardBtn.name = 'hardBtn';
 
-    var startBtn = game.add.sprite(300, game.world.centerY + 100, 'start_off');
-
-
     //  Enables all kind of input actions on this image (click, etc)
-    startBtn.inputEnabled = true;
     easyBtn.inputEnabled = true;
     hardBtn.inputEnabled = true;
+    upBtn.inputEnabled = true;
+    downBtn.inputEnabled = true;
 
     // When we click on the button, it will do the below. playGame is the function it will run when clicked.
     // game.input.onDown.addOnce(playGame, this);
-    startBtn.events.onInputDown.add(playGame, this);
     easyBtn.events.onInputDown.add(setDifficult, this);
     hardBtn.events.onInputDown.add(setDifficult, this);
+    upBtn.events.onInputDown.add(setPlayers, this);
+    downBtn.events.onInputDown.add(setPlayers, this);
+
+
+
 
 
 
@@ -280,6 +304,7 @@ var main = {
     playerNameText.text = 'Player Name: ' + playerName;
     totalScore = playerTemplate['points'];
     totalScoreText.text = 'Total Points: ' + totalScore;
+    numOfPlayersText.text = numOfPlayers;
 
 
   }
@@ -287,26 +312,34 @@ var main = {
 
 };
 
-function playGame(){
-  game.state.start('play');
-};
-
 function setDifficult(btn){
     if (btn.name == 'easyBtn'){
         currentLevel = Easy;
-        startBtn = game.add.sprite(200, game.world.centerY, 'easy_on');
-        hardBtn = game.add.sprite(400, game.world.centerY, 'hard_off');
+        game.state.start('play');
     }
     else if(btn.name == 'hardBtn'){
         currentLevel = Hard;
-        hardBtn = game.add.sprite(400, game.world.centerY, 'hard_on');
-        easyBtn = game.add.sprite(200, game.world.centerY, 'easy_off');
+        game.state.start('play');
     }
 }
+
+function setPlayers(btn){
+    if (btn.name == 'upBtn'){
+        numOfPlayers ++;
+    }
+    else if(btn.name == 'downBtn'){
+        numOfPlayers --;
+    }
+};
 
 
 
 // Setup game
+
+// get users screen size
+winW = document.body.offsetWidth;
+winH = document.body.offsetHeight;
+
 var game = new Phaser.Game(800, 600, Phaser.CANVAS,'gameDiv');
 game.state.add('play', play);
 game.state.add('main', main);

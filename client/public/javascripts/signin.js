@@ -1,11 +1,11 @@
 $( document ).ready(function() {
 
   $("#leaders").hide();
+  $('#gameDiv').hide();
 
-  $('#logInBtn').on('click', function(event) {
+  $('#logInBtn').click(function(event) {
 
     event.preventDefault();
-
 
     var name = $('#userName').val();
     var password = $('#password').val();
