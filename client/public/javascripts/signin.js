@@ -14,6 +14,18 @@ $( document ).ready(function() {
 
   });
 
+  $('#playBtn').on('click', function(event) {
+
+    event.preventDefault();
+
+    var player = {name: 'Player 1', id: 0}
+    var newGame = {score: 0};
+
+    setPlayer(player, newGame);
+
+  });
+
+
 
   $('#signInBtn').on('click', function(event) {
 
@@ -27,6 +39,7 @@ $( document ).ready(function() {
 
   $('#leadersBtn').on('click', function(){
     $("#leaders").show();
+    $('#connect').hide();
   });
 
 

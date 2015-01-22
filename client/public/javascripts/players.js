@@ -2,6 +2,7 @@ allPlayers = []
 totalScore = 0;
 playerName = '';
 
+
 function Player(playerInfo) {
   this.id = playerInfo['id'],
   this.name = playerInfo['name']
@@ -24,6 +25,7 @@ function Player(playerInfo) {
 Player.prototype.gotItem = function(pickedUpItem, player){
   console.log('got item');
   this.item = pickedUpItem;
+  console.log(this.item);
 }
 
 
@@ -32,36 +34,65 @@ Player.prototype.updatePoints = function(points){
   this.hud.text =  this.name + ' Lives: ' + this.lives + '   Points: ' + this.points;
 }
 
+Player.prototype.moveShipUp = function(){
+  game.physics.arcade.accelerationFromRotation(this.ship.rotation, 200, this.ship.body.acceleration);
+}
+
+Player.prototype.moveShipDown = function(){
+  game.physics.arcade.accelerationFromRotation(this.ship.rotation, -200, this.ship.body.acceleration);
+}
+
+Player.prototype.moveShipLeft = function(){
+  this.ship.body.angularVelocity = -300;
+}
+
+Player.prototype.moveShipRight = function(){
+  this.ship.body.angularVelocity = 300;
+}
+
+Player.prototype.stopAcceleration = function(){
+  this.ship.body.acceleration.set(0);
+}
+
+Player.prototype.stopAngular = function(){
+  this.ship.body.angularVelocity = 0;
+}
+
+
+
 Player.prototype.checkMovement = function(){
     if (this.moveUp.isDown){
-        game.physics.arcade.accelerationFromRotation(this.ship.rotation, 200, this.ship.body.acceleration);
+        movePlayer({id: this.id, move: 'up' });
     }
     else if (this.moveDown.isDown){
-        game.physics.arcade.accelerationFromRotation(this.ship.rotation, -200, this.ship.body.acceleration);
+      movePlayer({id: this.id, move: 'down' });
     }
     else{
-        this.ship.body.acceleration.set(0);
+        movePlayer({id: this.id, move: 'acceleration' });
     };
 
     if (this.turnLeft.isDown){
-        this.ship.body.angularVelocity = -300;
+        movePlayer({id: this.id, move: 'left' });
     }
     else if (this.turnRight.isDown){
-        this.ship.body.angularVelocity = 300;
+        movePlayer({id: this.id, move: 'right' });
     }
     else{
-        this.ship.body.angularVelocity = 0;
+      movePlayer({id: this.id, move: 'angular' });
     };
 
     if (this.shoot.isDown){
-        this.fireBullet();
+      playerShoot({id: this.id, fire: 'bullet' });
+    }
+    else if (this.shootRocket.isDown){
+      playerShoot({id: this.id, fire: 'rocket' });
     };
 
 };
 
 
-Player.prototype.fireBullet = function () {
 
+Player.prototype.fireRocket = function () {
   if(this.item == 'rocket' && this.shootCount < 11){
     this.shootCount ++;
     if (game.time.now > this.bulletTime){
@@ -80,10 +111,13 @@ Player.prototype.fireBullet = function () {
 
   }
   else{
-    this.item = '';
+    this.item = 'empty';
     this.shootCount = 0;
   };
+};
 
+
+Player.prototype.fireBullet = function () {
   if(this.canShoot == true){
     if (game.time.now > this.bulletTime){
         bullet = bullets.getFirstExists(false);
@@ -123,12 +157,11 @@ Player.prototype.reset = function(player) {
   }
   else{
     this.gameOver = true;
-    if(player.points < totalScore){
-      console.log(totalScore);
-      console.log(player.points);
-      scoreToSend = (totalScore - player.points) * -1;
-      console.log(scoreToSend);
-      updatePlayerScoreOnServer(scoreToSend);
+    if(this.name != 'Player 1'){
+      if(player.points < totalScore){
+        scoreToSend = (totalScore - player.points) * -1;
+        updatePlayerScoreOnServer(scoreToSend);
+      };
     };
     endGame();
   };
@@ -153,10 +186,10 @@ playerTemplate = {
 
 
 
-function buildPlayers(numOfPalyers){
-  for(var i = 0; i < numOfPalyers; i++){
+function buildPlayers(numOfPlayers){
+  for(var i = 0; i < numOfPlayers; i++){
 
-    player = new Player(playerTemplate);
+    var player = new Player(playerTemplate);
     player.ship = game.add.sprite(randomNumberPos(0, 750), randomNumberPos(0, 500), player.sprite);
     game.physics.enable(player.ship, Phaser.Physics.ARCADE);
     player.moveUp = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -164,6 +197,7 @@ function buildPlayers(numOfPalyers){
     player.turnLeft = game.input.keyboard.addKey(Phaser.Keyboard.A);
     player.turnRight = game.input.keyboard.addKey(Phaser.Keyboard.D);
     player.shoot = game.input.keyboard.addKey(Phaser.Keyboard.G);
+    player.shootRocket = game.input.keyboard.addKey(Phaser.Keyboard.H);
     player.ship.anchor.set(0.5, 0.5);
     player.ship.body.drag.set(100);
     player.ship.body.maxVelocity.set(200);

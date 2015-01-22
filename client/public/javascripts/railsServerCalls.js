@@ -40,7 +40,6 @@ function createNewPlayerOnServer(name, password){
 }
 
 function updatePlayerScoreOnServer(scoreToPass){
-  console.log(scoreToPass);
 
   $.ajax({
     url:'http://localhost:3000/games/' + newGame.id,

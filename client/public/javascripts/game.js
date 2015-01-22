@@ -90,6 +90,7 @@ var play = {
 };
 
 function getItem(player, item){
+    console.log(item);
     this.gotItem(item.type, player);
     item.kill();
 }
@@ -100,7 +101,9 @@ function checkWin(player){
         game.state.restart();
         player.gameOver = true
         totalScore += player.points;
-        updatePlayerScoreOnServer(totalScore);
+        if(player.name != 'Player 1'){
+            updatePlayerScoreOnServer(totalScore);
+        };
         endGame();
     };
 };
@@ -146,6 +149,7 @@ function allScreenWrap(){
 function  rocketHitAsteroid(rocket, asteroid){
     asteroid.kill();
     rocket.kill();
+    this.updatePoints(100)
 }
 
 function bulletHitBigAsteroid(bullet, asteroid){
@@ -264,7 +268,7 @@ var main = {
     totalScoreText = game.add.text(400, game.world.centerY + 100, 'Total Points: ' + totalScore, { font: "16px Arial", fill: "#ffffff", align: "center" });
     totalScoreText.anchor.setTo(0.5, 0.5);
 
-    numOfPlayersText = game.add.text(game.world.centerX, game.world.centerY + 50, " " + numOfPlayers, { font: "16px Arial", fill: "#ffffff", align: "center" });
+    numOfPlayersText = game.add.text(game.world.centerX, game.world.centerY + 40, " " + numOfPlayers, { font: "30px Arial", fill: "#ffffff", align: "center" });
     numOfPlayersText.anchor.setTo(0.5, 0.5);
 
     var logo = game.add.sprite(200, game.world.centerY -200, 'logo');
